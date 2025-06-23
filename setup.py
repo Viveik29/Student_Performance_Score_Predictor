@@ -1,4 +1,5 @@
 from setuptools import find_packages ,setup
+import os
 
 
 requirement = []
@@ -25,3 +26,5 @@ install_requires = get_requirements('requirements.txt')
 
 
 )
+if __name__=="__main__":
+   print(requirement)
