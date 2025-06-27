@@ -22,20 +22,29 @@ from src.utils import save_object,evaluate_models
 @dataclass
 class ModelTrainerConfig:
     trained_model_file_path=os.path.join("artifacts","model.pkl")
+    trained_model_file_path1=os.path.join("artifacts","model.pkl1")
 
 class ModelTrainer:
     def __init__(self):
         self.model_trainer_config=ModelTrainerConfig()
 
 
-    def initiate_model_trainer(self,train_array,test_array):
+    def initiate_model_trainer(self,train_array1,train_array2,train_array3,test_array1,test_array2,test_array3):
         try:
             logging.info("Split training and test input data")
             X_train,y_train,X_test,y_test=(
-                train_array[:,:-1],
-                train_array[:,-1],
-                test_array[:,:-1],
-                test_array[:,-1]
+                train_array1[:,:-1],
+                train_array1[:,-1],
+                train_array2[:,:-1],
+                train_array2[:,-1],
+                train_array3[:,:-1],
+                train_array3[:,-1],
+                test_array1[:,:-1],
+                test_array1[:,-1],
+                test_array2[:,:-1],
+                test_array2[:,-1],
+                test_array3[:,:-1],
+                test_array3[:,-1]
             )
             models = {
                 "Random Forest": RandomForestRegressor(),
@@ -84,36 +93,71 @@ class ModelTrainer:
                 
             }
 
-            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,
+            model_report1:dict=evaluate_models(X_train1=X_train1,y_train1=y_train1,X_test1=X_test1,y_test1=y_test1,
+                                             models=models,param=params)
+            model_report2:dict=evaluate_models(X_train2=X_train2,y_train2=y_train2,X_test2=X_test2,y_test2=y_test2,
+                                             models=models,param=params)
+            model_report3:dict=evaluate_models(X_train3=X_train3,y_train3=y_train3,X_test3=X_test3,y_test3=y_test3,
                                              models=models,param=params)
             
             ## To get best model score from dict
-            best_model_score = max(sorted(model_report.values()))
+            best_model_score1 = max(sorted(model_report1.values()))
+            best_model_score2 = max(sorted(model_report2.values()))
+            best_model_score3 = max(sorted(model_report3.values()))
 
             ## To get best model name from dict
 
-            best_model_name = list(model_report.keys())[
-                list(model_report.values()).index(best_model_score)
+            best_model_name1 = list(model_report1.keys())[
+                list(model_report1.values()).index(best_model_score1)
             ]
-            best_model = models[best_model_name]
+            best_model1 = models[best_model_name1]
 
-            if best_model_score<0.6:
+            best_model_name2 = list(model_report2.keys())[
+                list(model_report2.values()).index(best_model_score2)
+            ]
+            best_model2 = models[best_model_name2]
+
+            best_model_name3 = list(model_report3.keys())[
+                list(model_report3.values()).index(best_model_score3)
+            ]
+            best_model3 = models[best_model_name3]
+
+            if best_model_score1<0.6:
                 raise CustomException("No best model found")
+            if best_model_score2<0.6:
+                raise CustomException("No best model found")
+            if best_model_score3<0.6:
+                raise CustomException("No best model found")
+            
             logging.info(f"Best found model on both training and testing dataset")
 
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,
-                obj=best_model
+                obj=best_model1
+            )
+            save_object(
+                file_path=self.model_trainer_config.trained_model_file_path,
+                obj=best_model2
+            )
+            save_object(
+                file_path=self.model_trainer_config.trained_model_file_path,
+                obj=best_model3
             )
 
-            predicted=best_model.predict(X_test)
+            predicted1=best_model1.predict(X_test1)
+            predicted2=best_model2.predict(X_test2)
+            predicted3=best_model3.predict(X_test3)
 
-            r2_square = r2_score(y_test, predicted)
-            return r2_square
+            r2_square1 = r2_score(y_test1, predicted1)
+            return r2_square1
+
+            r2_square2 = r2_score(y_test2, predicted2)
+            return r2_square2
             
-
-
-
+            r2_square3 = r2_score(y_test3, predicted3)
+            return r2_square3
+            
+            
             
         except Exception as e:
             raise CustomException(e,sys)
