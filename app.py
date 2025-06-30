@@ -2,6 +2,7 @@ from flask import Flask,request,render_template,jsonify
 import numpy as np
 import pandas as pd
 import sys
+from src.Logger import logging
 
 from sklearn.preprocessing import StandardScaler
 from src.pipeline.predict_pipeline import CustomData,PredictPipeline
@@ -79,7 +80,7 @@ app=application
 # import sys
 # import pandas as pd
 # from src.pipeline.predict_pipeline import CustomData,PredictPipeline  # adjust your imports
-
+logging.info(f'Start predicting on input data')
 @app.route('/predictdata',methods=['GET','POST'])
 def predict_datapoint():
     if request.method == 'GET':
@@ -116,23 +117,61 @@ def predict_datapoint():
 
     # HTML Form Submission
         else:
+            
             try:
+                #input_combo = data['input_combo']
                 data=CustomData(
                 gender=request.form.get('gender'),
                 race_ethnicity=request.form.get('ethnicity'),
                 parental_level_of_education=request.form.get('parental_level_of_education'),
                 lunch=request.form.get('lunch'),
                 test_preparation_course=request.form.get('test_preparation_course'),
-                writing_score=float(request.form.get('writing_score')),
-                reading_score=float(request.form.get('reading_score'))
+                writing_score=(request.form.get('writing_score')),
+                reading_score=(request.form.get('reading_score')),
+                math_score =(request.form.get('math_score')),
+                #input_combo = request.form.get("input_combo")
     
             )
-
+                logging.info(f'Data frame created ')
                 pred_df = data.get_data_as_data_frame()
+                #print(pred_df)
                 predict_pipeline = PredictPipeline()
-                results = predict_pipeline.predict(pred_df)
+                logging.info(f'As per predicting combo start reading options ')
 
+                input_combo = request.form.get("input_combo")
+                logging.info(f'input combo read successfully {input_combo} ')
+
+                if input_combo == "reading_writing":
+                    # use math_score and reading_score to predict writing_score
+                    pred_df['writing_score'] = float(request.form.get("writing_score"))
+                    pred_df['reading_score'] = float(request.form.get("reading_score"))
+                    #results = predict_pipeline.predict(pred_df,input_combo)
+                    logging.info(f'selected read and write option ')    
+
+                elif input_combo == "math_reading":
+                    pred_df['math_score'] = float(request.form.get("math_score"))
+                    pred_df['reading_score'] = float(request.form.get("reading_score"))
+                    #results = predict_pipeline.predict(pred_df,input_combo )
+                    logging.info(f'selected read and math option ')
+                    
+                elif input_combo == "math_writing":
+                    pred_df['math_score'] = float(request.form.get("math_score"))
+                    pred_df['writing_score'] = float(request.form.get("writing_score"))
+                    #results = predict_pipeline.predict(pred_df,input_combo )
+                    logging.info(f'selected math and write option ')
+
+                #logging.info(f'prediticting now ')
+                logging.info('Predicting now...')
+                results = predict_pipeline.predict(pred_df, input_combo)
                 return render_template('home.html', results=results[0])
+                                
+
+
+                # pred_df = data.get_data_as_data_frame()
+                # predict_pipeline = PredictPipeline()
+                # results = predict_pipeline.predict(pred_df)
+
+                #return render_template('home.html', results=results[0])
 
             except Exception as e:
                 print("Error:", e, file=sys.stderr)

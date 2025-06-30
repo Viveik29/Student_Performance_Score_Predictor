@@ -16,9 +16,9 @@ from src.utils import save_object
 
 @dataclass 
 class DataTransformationConfig:
-    preprocessor_obj_file_path1=os.path.join('artifacts',"proprocessor1.pkl")
-    preprocessor_obj_file_path2=os.path.join('artifacts',"proprocessor2.pkl")
-    preprocessor_obj_file_path3=os.path.join('artifacts',"proprocessor3.pkl")
+    preprocessor_obj_file_path1=os.path.join('artifacts',"preprocessor1.pkl")
+    preprocessor_obj_file_path2=os.path.join('artifacts',"preprocessor2.pkl")
+    preprocessor_obj_file_path3=os.path.join('artifacts',"preprocessor3.pkl")
 
 class DataTransformation:
     def __init__(self):
@@ -73,8 +73,9 @@ class DataTransformation:
 
 
             )
+            
 
-            return preprocessor.fit_transform(DF)
+            return preprocessor.fit(DF)
         
         except Exception as e:
             raise CustomException(e,sys)
@@ -136,10 +137,13 @@ class DataTransformation:
             # preprocessing_obj2=self.get_data_transformer_object(y)
             # preprocessing_obj3=self.get_data_transformer_object(z)
 
-            input_feature_train_arr1=self.get_data_transformer_object(input_feature_train_df1)
-            input_feature_train_arr2=self.get_data_transformer_object(input_feature_train_df2)
-            input_feature_train_arr3=self.get_data_transformer_object(input_feature_train_df3)
-            #input_feature_train_arr1 = preprocessor.fit_transform(input_feature_train_df1)
+            preprocessor1=self.get_data_transformer_object(input_feature_train_df1)
+            print("input_feature_train_arr1 type:", type(preprocessor1))
+            preprocessor2=self.get_data_transformer_object(input_feature_train_df2)
+            preprocessor3=self.get_data_transformer_object(input_feature_train_df3)
+            input_feature_train_arr1 = preprocessor1.fit_transform(input_feature_train_df1)
+            input_feature_train_arr2 = preprocessor2.fit_transform(input_feature_train_df2)
+            input_feature_train_arr3 = preprocessor3.fit_transform(input_feature_train_df3)
             logging.info("function testing")
             # input_feature_train_arr1=preprocessing_obj1.fit_transform(input_feature_train_df1)
             # input_feature_train_arr2=preprocessing_obj2.fit_transform(input_feature_train_df2)
@@ -149,9 +153,13 @@ class DataTransformation:
             # input_feature_test_arr1=preprocessing_obj1.transform(input_feature_test_df1)
             # input_feature_test_arr2=preprocessing_obj2.transform(input_feature_test_df2)
             # input_feature_test_arr3=preprocessing_obj3.transform(input_feature_test_df3)
-            input_feature_test_arr1=self.get_data_transformer_object(input_feature_test_df1)
-            input_feature_test_arr2=self.get_data_transformer_object(input_feature_test_df2)
-            input_feature_test_arr3=self.get_data_transformer_object(input_feature_test_df3)
+            # input_feature_test_arr1=self.get_data_transformer_object(input_feature_test_df1)
+            # input_feature_test_arr2=self.get_data_transformer_object(input_feature_test_df2)
+            # input_feature_test_arr3=self.get_data_transformer_object(input_feature_test_df3)
+            input_feature_test_arr1 = preprocessor1.transform(input_feature_test_df1)
+            input_feature_test_arr2 = preprocessor2.transform(input_feature_test_df2)
+            input_feature_test_arr3 = preprocessor3.transform(input_feature_test_df3)
+
 
 
             train_arr1 = np.c_[input_feature_train_arr1, np.array(target_feature_train_df1)]
@@ -164,6 +172,7 @@ class DataTransformation:
             test_arr1 = np.c_[input_feature_test_arr1, np.array(target_feature_test_df1)]
             test_arr2 = np.c_[input_feature_test_arr2, np.array(target_feature_test_df2)]
             test_arr3 = np.c_[input_feature_test_arr3, np.array(target_feature_test_df3)]
+            
 
             logging.info("Testing array created")
 
@@ -172,19 +181,19 @@ class DataTransformation:
             save_object(
             
                 file_path=self.data_transformation_config.preprocessor_obj_file_path1,
-                obj=input_feature_train_arr1
+                obj=preprocessor1
 
             )
             save_object(
               
                 file_path=self.data_transformation_config.preprocessor_obj_file_path2,
-                obj=input_feature_train_arr2
+                obj=preprocessor2
 
             )
             save_object(
              
                 file_path=self.data_transformation_config.preprocessor_obj_file_path3,
-                obj=input_feature_train_arr3
+                obj=preprocessor3
 
             )
 

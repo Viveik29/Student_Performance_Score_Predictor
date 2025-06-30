@@ -7,6 +7,7 @@ import dill
 import pickle
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
+from sklearn.base import clone
 
 from src.exception import CustomException
 
@@ -25,15 +26,16 @@ def save_object(file_path, obj):
 def evaluate_models(X_train, y_train,X_test,y_test,models,param):
     try:
         report = {}
-
+        
         for i in range(len(list(models))):
             model = list(models.values())[i]
+            fresh_model = clone(model)
             para=param[list(models.keys())[i]]
 
-            gs = GridSearchCV(model,para,cv=3)
+            gs = GridSearchCV(fresh_model,para,cv=3)
             gs.fit(X_train,y_train)
 
-            model.set_params(**gs.best_params_)
+            #model.set_params(**gs.best_params_)
             model.fit(X_train,y_train)
 
             #model.fit(X_train, y_train)  # Train model
@@ -49,6 +51,8 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
             report[list(models.keys())[i]] = test_model_score
 
         return report
+
+
 
     except Exception as e:
         raise CustomException(e, sys)

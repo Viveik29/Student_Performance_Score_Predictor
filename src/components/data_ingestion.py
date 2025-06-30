@@ -56,12 +56,12 @@ if __name__=="__main__":
     train_data,test_data=obj.initiate_data_ingestion()
 
     data_transformation=DataTransformation()
-    #train_arr1,train_arr2,train_arr3,test_arr1,test_arr2,test_arr3=data_transformation.initiate_data_transformation(train_data,test_data)
-    Train=data_transformation.initiate_data_transformation(train_data,test_data)
-    print(Train)
+    train_arr1,train_arr2,train_arr3,test_arr1,test_arr2,test_arr3_,*_=data_transformation.initiate_data_transformation(train_data,test_data)
+    # Train=data_transformation.initiate_data_transformation(train_data,test_data)
+    # print(Train)
 
     modeltrainer=ModelTrainer()
-    print(modeltrainer.initiate_model_trainer(train_arr1,train_arr2,train_arr3,test_arr1,test_arr2,test_arr3))
+    print(modeltrainer.initiate_model_trainer(train_arr1,train_arr2,train_arr3,test_arr1,test_arr2,test_arr3_))
 
 
 
