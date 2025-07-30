@@ -1,4 +1,4 @@
-Student Performance Score Predictor:
+Student Performance Score Predictor:-
 
 This project is a Flask-based web application that predicts a student’s performance in one subject based on their scores in the other two subjects (Math, Reading, Writing). It supports both web-based form input and JSON API-based requests.
 ________________________________________
