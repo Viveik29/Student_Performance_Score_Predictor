@@ -1,4 +1,5 @@
-#Student Performance Score Predictor
+Student Performance Score Predictor:
+
 This project is a Flask-based web application that predicts a student’s performance in one subject based on their scores in the other two subjects (Math, Reading, Writing). It supports both web-based form input and JSON API-based requests.
 ________________________________________
 ✨ Key Features
@@ -24,14 +25,14 @@ student_score_predictor/
 ________________________________________
 ⚡ Setup Instructions
 1. Clone the Repository
-git clone https://github.com/yourusername/student_score_predictor.git
+2. https://github.com/Viveik29/Student_Performance_Score_Predictor.git
 cd student_score_predictor
-2. Create a Virtual Environment
+3. Create a Virtual Environment
 python -m venv venv
 source venv/bin/activate  # On Windows use: venv\Scripts\activate
-3. Install Required Libraries
+4. Install Required Libraries
 pip install -r requirements.txt
-4. Run the App
+5. Run the App
 python app.py
 Open your browser and navigate to http://localhost:80 or http://127.0.0.1
 ________________________________________
@@ -72,16 +73,14 @@ ________________________________________
 •	Targets one subject while using two others as predictors
 •	Uses separate pipelines for each prediction mode
 ________________________________________
-🚫 Limitations
-•	Only two input features allowed at a time
-•	Assumes clean numerical data
-•	No demographic analysis in current version
 ________________________________________
 📍 Credits
 •	Built with Flask, Scikit-learn, Pandas
 •	Dataset source: Open-source student performance dataset
 _____________________________________________
-🌟 Sample Screensho
+🌟 Sample Screenshot:
+<img width="861" height="585" alt="image" src="https://github.com/user-attachments/assets/16216b6e-e661-4ef8-aec0-fd218049861e" />
+
 ____________________________________
 
 
