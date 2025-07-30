@@ -10,5 +10,6 @@ dill
 flask
 flask_cors
 lime
+pytest
 
 #-e .
